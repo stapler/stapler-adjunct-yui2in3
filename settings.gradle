@@ -1,0 +1,6 @@
+new File("2in3/dist").eachDir { d ->
+  if (d.name ==~ /\d+.\d+.\d+/) {
+    n = "modules/"+d.name
+    include "${n}-base","${n}-debug","${n}-skin-sam"
+  }
+}
