@@ -1,0 +1,3 @@
+[submodule "2in3"]
+	path = 2in3
+	url = https://github.com/yui/2in3.git
