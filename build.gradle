@@ -11,7 +11,8 @@ subprojects {
     apply plugin:"maven"
     apply plugin:"signing"
     
-    tokens = project.name.split("-");   // e.g., 2.5.0-base
+    baseName = project.name.split("/")[-1]
+    tokens = baseName.split("-");   // e.g., 2.5.0-base
     yVersions << tokens[0]
 
     group="org.kohsuke.stapler"
@@ -47,7 +48,7 @@ subprojects {
     customizePom = {
         pom {
             artifactId = "yui2in3-${tokens[1]}"
-            name = "YUI3 ${p.name}"
+            name = "YUI3 ${baseName}"
             project {
                 description = p.description
                 url = "http://kohsuke.org/";
@@ -92,7 +93,7 @@ yVersions.each { v -> // v is something like "1.2.3"
     }
 
     yuiProject = { name,dep,config ->
-        project(name) {
+        project(":modules/"+name) {
             jar {
                 from("../../"+yuiDir.path,config)
                 into "yui3/"
@@ -100,29 +101,29 @@ yVersions.each { v -> // v is something like "1.2.3"
             }
 
             dep.each { d ->
-                dependsOn ":${d}"
+                dependsOn ":modules/${v}-${d}"
                 dependencies {
-                    compile "${group}:yui3-${d}:${version}"
+                    compile "${group}:yui2in3-${d}:${version}"
                 }
             }
         }
     }
 
     // minified js and other base assets
-    yuiProject(":${v}-base",[]) {
+    yuiProject("${v}-base",[]) {
         include "**/*";
         exclude "**/*-debug.js";
         exclude "**/skins/";
         exclude regularJs;
     }
 
-    def deps = ["${v}-base"];
+    def deps = ["base"];
     // debug version of scripts
-    yuiProject(":${v}-debug",deps) {
+    yuiProject("${v}-debug",deps) {
         include  "**/*-debug.js";
     }
 
-    yuiProject(":${v}-skin-sam",deps) {
+    yuiProject("${v}-skin-sam",deps) {
         include  "**/skins/sam/";
     }
 }
