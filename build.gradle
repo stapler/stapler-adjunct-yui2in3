@@ -2,7 +2,7 @@
     This script expects you to have YUI3 expanded in "./yui"
 */
 
-def yVersions = []; // version of YUI2 that we are packaging
+def yVersions = [] as Set; // version of YUI2 that we are packaging
 
 dependsOnChildren()
 
@@ -11,8 +11,8 @@ subprojects {
     apply plugin:"maven"
     apply plugin:"signing"
     
-    baseName = project.name.split("/")[-1]
-    tokens = baseName.split("-");   // e.g., 2.5.0-base
+    baseName = project.name.split("/")[-1] // baseName is something like 2.5.0-base
+    tokens = baseName.split("-",2);   
     yVersions << tokens[0]
 
     group="org.kohsuke.stapler"
@@ -96,7 +96,7 @@ yVersions.each { v -> // v is something like "1.2.3"
         project(":modules/"+name) {
             jar {
                 from("../../"+yuiDir.path,config)
-                into "yui3/"
+                into("yui3/")
                 includeEmptyDirs = false
             }
 

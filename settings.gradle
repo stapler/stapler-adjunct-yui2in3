@@ -1,6 +1,8 @@
+// include "modules/2.8.0-base","modules/2.8.0-debug","modules/2.8.0-skin-sam"; return
 new File("2in3/dist").eachDir { d ->
   if (d.name ==~ /\d+.\d+.\d+/) {
     n = "modules/"+d.name
     include "${n}-base","${n}-debug","${n}-skin-sam"
   }
 }
+
